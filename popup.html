@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adiciona RG</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #181c27;
+      --surface2: #1f2435;
+      --border: rgba(255,255,255,0.08);
+      --border-active: rgba(99,153,255,0.5);
+      --accent: #4f8cff;
+      --accent-dim: rgba(79,140,255,0.15);
+      --text: #e8eaf2;
+      --text-muted: #7a80a0;
+      --text-hint: #454b65;
+      --success: #34d399;
+      --success-dim: rgba(52,211,153,0.12);
+      --danger: #f87171;
+      --danger-dim: rgba(248,113,113,0.12);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      width: 320px;
+      min-height: 420px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 34px;
+      height: 34px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-active);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--accent);
+    }
+
+    .header-text h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .header-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* Badge */
+    .badge {
+      margin-left: auto;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--text-hint);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    /* Body */
+    .body {
+      padding: 18px 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      padding: 10px 12px;
+      resize: none;
+      height: 96px;
+      outline: none;
+      transition: border-color 0.15s;
+      line-height: 1.6;
+    }
+
+    textarea::placeholder { color: var(--text-hint); }
+
+    textarea:focus {
+      border-color: var(--border-active);
+      background: var(--surface2);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--text-hint);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Counter */
+    .counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      margin-bottom: 14px;
+    }
+
+    .counter-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .counter-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(79,140,255,0.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      background: var(--surface2);
+      border-radius: 4px;
+      height: 4px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Status */
+    .status {
+      font-size: 11px;
+      color: var(--text-hint);
+      text-align: center;
+      min-height: 16px;
+      margin-bottom: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .status.running { color: var(--accent); }
+    .status.done { color: var(--success); }
+    .status.error { color: var(--danger); }
+
+    /* Button */
+    #btn-start {
+      width: 100%;
+      height: 40px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #btn-start:hover { opacity: 0.88; }
+    #btn-start:active { transform: scale(0.98); }
+
+    #btn-start:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #btn-start svg {
+      width: 14px;
+      height: 14px;
+      fill: #fff;
+      flex-shrink: 0;
+    }
+
+    /* Separator */
+    .sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 0 14px;
+    }
+
+    /* Dot indicator */
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-hint);
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    .dot.active { background: var(--accent); animation: pulse 1.2s infinite; }
+    .dot.done { background: var(--success); animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Adiciona RG</h1>
+      <p>Inserção automática de registros</p>
+    </div>
+    <span class="badge">v2.0</span>
+  </div>
+
+  <div class="body">
+    <label for="rgNumbers">Números de RG</label>
+    <textarea
+      id="rgNumbers"
+      placeholder="Ex: 1234567, 9876543, 1122334"
+      spellcheck="false"
+    ></textarea>
+    <p class="hint">
+      <span>Separe múltiplos RGs por vírgula ou nova linha</span>
+    </p>
+
+    <div class="counter-row">
+      <span class="counter-label">Total detectado</span>
+      <span class="counter-value" id="count">0 RGs</span>
+    </div>
+
+    <hr class="sep">
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <p class="status" id="status">Aguardando início</p>
+
+    <button id="btn-start" disabled>
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      Iniciar processamento
+    </button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
